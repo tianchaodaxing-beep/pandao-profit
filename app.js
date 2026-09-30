@@ -94,7 +94,7 @@
       ]),
       U.table(
         [
-          { key: "item", label: "费用项目" },
+          { key: "item", label: "费用项目", translate: true },
           { key: "value", label: "金额", number: true },
         ],
         [
