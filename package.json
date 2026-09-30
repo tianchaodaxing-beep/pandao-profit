@@ -1,6 +1,6 @@
 {
   "name": "pandao-profit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "单品测算、批量表格计算与价格情景比较。",
   "license": "MIT",
