@@ -1,0 +1,11 @@
+const test=require('node:test'); const assert=require('node:assert/strict'); const B=require('../core.js');
+const row={price:120,quantity:100,purchase:30,exchange:1,shipping:8,other:2,feeRate:10,ads:500,fixed:300};
+test("采购汇率和各项费用独立核对",()=>{const r=B.profit({price:120,quantity:100,purchase:15,exchange:2,shipping:8,other:2,feeRate:10,ads:500,fixed:300});assert.deepEqual(r,{revenue:12000,cost:4000,fees:1200,ads:500,fixed:300,profit:6000,margin:50,unitProfit:60,breakEvenQuantity:12});});
+test("零售价没有虚构利润率",()=>{const r=B.profit({...row,price:0});assert.equal(r.margin,null);assert.ok(r.profit<0);assert.equal(r.breakEvenQuantity,null);});
+test("负成本被拒绝",()=>{assert.throws(()=>B.profit({...row,purchase:-1}));});
+test("缺失费用被拒绝",()=>{assert.throws(()=>B.profit({...row,ads:''}));});
+test("汇率为零被拒绝",()=>{assert.throws(()=>B.profit({...row,exchange:0}));});
+test("百分之百费率没有收支平衡销量",()=>{assert.equal(B.profit({...row,feeRate:100}).breakEvenQuantity,null);});
+test("零销量被拒绝",()=>{assert.throws(()=>B.profit({...row,quantity:0}));});
+test("超大数值不返回无穷大",()=>{assert.throws(()=>B.profit({...row,price:1e308,quantity:1e308}));});
+test("千位分隔符可读取",()=>{assert.equal(B.profit({...row,price:'1,000'}).revenue,100000);});
